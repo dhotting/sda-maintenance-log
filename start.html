@@ -959,6 +959,14 @@
         let allLogs = [];
 
         // Initialize
+        let googleLibraryLoaded = false;
+        
+        // Callback when Google library loads
+        function onGoogleLibraryLoad() {
+            googleLibraryLoaded = true;
+            console.log('Google Sign-In library loaded');
+        }
+        
         window.onload = function() {
             setCustomLogo();
             
