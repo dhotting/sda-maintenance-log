@@ -789,6 +789,7 @@
             border-left: 4px solid var(--danger);
         }
     </style>
+    <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
 </head>
 <body>
     <!-- Login Screen -->
@@ -948,7 +949,7 @@
         // Configuration
         const GOOGLE_CLIENT_ID = '456685867763-5vcvlp0tu0ddurnrc67onu16lti2uij4.apps.googleusercontent.com';
         const ALLOWED_DOMAIN = '@southdadeacademy.com';
-        const PDF_SERVER_URL = window.location.origin; // Auto-detect server URL
+        const PDF_SERVER_URL = window.location.origin;
         
         // South Dade Academy Logo
         const CUSTOM_LOGO_URL = 'https://southdadeacademy.com/wp-content/uploads/2024/08/SDA-Logo-1-e1731009797781-3.png';
@@ -959,6 +960,13 @@
         let allLogs = [];
 
         // Initialize
+        let googleLibraryLoaded = false;
+        
+        function onGoogleLibraryLoad() {
+            googleLibraryLoaded = true;
+            console.log('Google Sign-In library loaded');
+        }
+        
         window.onload = function() {
             setCustomLogo();
             
