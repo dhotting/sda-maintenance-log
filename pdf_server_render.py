@@ -74,7 +74,26 @@ def health():
 @app.route('/generate-pdf', methods=['POST'])
 def generate_pdf():
     try:
+        if not request.json:
+            return jsonify({'error': 'No JSON data received'}), 400
+        
         log_data = request.json
+        
+        # Validate required fields
+        required_fields = ['id', 'title', 'category', 'location', 'description', 'createdBy', 'timestamp']
+        missing_fields = [field for field in required_fields if field not in log_data]
+        if missing_fields:
+            return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
+        
+        print(f"\n{'='*70}")
+        print("PDF GENERATION REQUEST")
+        print(f"{'='*70}")
+        print(f"Log ID: {log_data.get('id', 'MISSING')}")
+        print(f"Title: {log_data.get('title', 'MISSING')}")
+        print(f"Category: {log_data.get('category', 'MISSING')}")
+        print(f"Has images: {bool(log_data.get('images'))}")
+        print(f"{'='*70}\n")
+        
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=0.6*inch, leftMargin=0.6*inch, topMargin=0.6*inch, bottomMargin=0.6*inch)
         elements = []
@@ -185,8 +204,14 @@ def generate_pdf():
         buffer.seek(0)
         return send_file(buffer, mimetype='application/pdf', as_attachment=True, download_name=f'SDA-MaintenanceReport-{log_data["id"]}.pdf')
     except Exception as e:
-        print(f"PDF Error: {e}")
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"\n{'='*70}")
+        print("PDF GENERATION ERROR:")
+        print(f"{'='*70}")
+        print(error_details)
+        print(f"{'='*70}\n")
+        return jsonify({'error': f'PDF generation failed: {str(e)}'}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
