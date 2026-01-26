@@ -789,7 +789,7 @@
             border-left: 4px solid var(--danger);
         }
     </style>
-    <script src="https://accounts.google.com/gsi/client" async defer onload="onGoogleLibraryLoad()"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- Login Screen -->
@@ -960,13 +960,6 @@
         let allLogs = [];
 
         // Initialize
-        let googleLibraryLoaded = false;
-        
-        function onGoogleLibraryLoad() {
-            googleLibraryLoaded = true;
-            console.log('Google Sign-In library loaded');
-        }
-        
         window.onload = function() {
             setCustomLogo();
             
