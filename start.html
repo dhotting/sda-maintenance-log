@@ -1213,23 +1213,17 @@
         }
 
         async function loadLogs() {
-            // Load from server database instead of localStorage
-            logs = await fetchLogsFromServer();
-            applyFilters();
-        } catch (err) {
-                            console.error('Error loading log:', key, err);
-                        }
-                    }
-                }
-                logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                allLogs = logs;
-                updateStats(logs);
-                displayLogs(logs);
+            try {
+                // Load from server database instead of localStorage
+                logs = await fetchLogsFromServer();
+                applyFilters();
             } catch (error) {
                 console.error('Error loading logs:', error);
-                displayEmptyState();
+                logs = [];
+                applyFilters();
             }
         }
+
 
         function updateStats(logs) {
             document.getElementById('statTotal').textContent = logs.length;
