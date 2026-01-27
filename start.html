@@ -949,7 +949,7 @@
         // Configuration
         const GOOGLE_CLIENT_ID = '456685867763-5vcvlp0tu0ddurnrc67onu16lti2uij4.apps.googleusercontent.com';
         const ALLOWED_DOMAIN = '@southdadeacademy.com';
-        const PDF_SERVER_URL = 'http://localhost:5000';
+        const PDF_SERVER_URL = window.location.origin;
         
         // South Dade Academy Logo
         const CUSTOM_LOGO_URL = 'https://southdadeacademy.com/wp-content/uploads/2024/08/SDA-Logo-1-e1731009797781-3.png';
@@ -958,6 +958,8 @@
         let uploadedImages = [];
         let currentFilter = 'all';
         let allLogs = [];
+        let currentEditingLogId = null;
+        let logs = [];
 
         // Initialize
         window.onload = function() {
@@ -1155,7 +1157,6 @@
             }
         });
 
-        async 
         // ========== DATABASE API FUNCTIONS ==========
         
         // Fetch all logs from server
@@ -1210,6 +1211,19 @@
                 showToast('Failed to delete log', 'error');
                 throw error;
             }
+        }
+
+        
+        function applyFilters() {
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            let filteredLogs = logs;
+            
+            if (activeFilter && activeFilter !== 'all') {
+                filteredLogs = logs.filter(log => log.category === activeFilter);
+            }
+            
+            displayLogs(filteredLogs);
+            updateStats(logs);
         }
 
         async function loadLogs() {
@@ -1333,7 +1347,7 @@
         }
 
         // Edit log functionality
-        let currentEditingLogId = null;
+
 
         function editLog(logId) {
             const log = allLogs.find(l => l.id === logId);
