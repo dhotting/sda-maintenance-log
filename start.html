@@ -1159,6 +1159,19 @@
             }
         });
 
+
+        // Filter button handlers
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                // Apply filters
+                applyFilters();
+            });
+        });
+
         // ========== DATABASE API FUNCTIONS ==========
         
         // Fetch all logs from server
@@ -1217,7 +1230,11 @@
 
         
         function applyFilters() {
-            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            // Update allLogs reference
+            allLogs = logs;
+            
+            const activeFilterBtn = document.querySelector('.filter-btn.active');
+            const activeFilter = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
             let filteredLogs = logs;
             
             if (activeFilter && activeFilter !== 'all') {
