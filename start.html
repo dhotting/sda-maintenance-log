@@ -254,10 +254,18 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            border: 2px solid var(--border);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .logout-btn {
@@ -788,6 +796,141 @@
         .toast.error {
             border-left: 4px solid var(--danger);
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .form-section {
+                width: 100%;
+                margin-bottom: 1.5rem;
+            }
+            
+            .logs-section {
+                width: 100%;
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .log-card {
+                padding: 1rem;
+            }
+            
+            .log-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .log-actions {
+                width: 100%;
+                justify-content: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .log-actions button {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .form-section h3 {
+                font-size: 1.25rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .user-info {
+                order: -1;
+                width: 100%;
+            }
+            
+            .filter-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 0.5rem;
+            }
+            
+            .filter-btn {
+                white-space: nowrap;
+                padding: 0.625rem 1rem;
+            }
+            
+            .image-preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+                padding: 1.5rem;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .form-input,
+            .form-select,
+            .form-textarea {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.875rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .log-title {
+                font-size: 1.125rem;
+            }
+            
+            .log-description {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.25rem;
+            }
+            
+            .header p {
+                font-size: 0.75rem;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card p {
+                font-size: 0.75rem;
+            }
+            
+            .image-preview-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-details h3 {
+                font-size: 1rem;
+            }
+            
+            .user-details p {
+                font-size: 0.8rem;
+            }
+        }
     </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -837,7 +980,7 @@
                         <div class="user-name" id="userName"></div>
                         <div class="user-email" id="userEmail"></div>
                     </div>
-                    <img id="userAvatar" class="user-avatar" src="" alt="User">
+                    <div id="userAvatar" class="user-avatar"></div>
                     <button class="logout-btn" onclick="handleLogout()">Sign Out</button>
                 </div>
             </div>
@@ -981,6 +1124,23 @@
             document.getElementById('headerLogoImg').src = CUSTOM_LOGO_URL;
         }
 
+
+        function getInitials(name) {
+            if (!name) return '?';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                // First and last name
+                return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+            } else if (parts[0].includes('@')) {
+                // Email address - use first 2 letters before @
+                const emailName = parts[0].split('@')[0];
+                return emailName.substring(0, 2).toUpperCase();
+            } else {
+                // Single name - use first 2 letters
+                return parts[0].substring(0, 2).toUpperCase();
+            }
+        }
+
         function isValidEmail(email) {
             return email.toLowerCase().endsWith(ALLOWED_DOMAIN);
         }
@@ -1054,7 +1214,7 @@
             
             document.getElementById('userName').textContent = currentUser.name;
             document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userAvatar').src = currentUser.picture;
+            document.getElementById('userAvatar').textContent = getInitials(currentUser.name || currentUser.email);
             
             loadLogs();
         }
@@ -1299,7 +1459,7 @@
                         ` : ''}
                     </div>
                     <div class="log-footer">
-                        <div class="log-author">Created by ${escapeHtml(log.author || 'Unknown')}</div>
+                        <div class="log-author">Created by ${escapeHtml(log.createdBy || 'Unknown')}</div>
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn-secondary" onclick="editLog('${log.id}')" style="color: #0066ff;">
                                 <span>✏️</span> Edit
