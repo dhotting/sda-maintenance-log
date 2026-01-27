@@ -1118,40 +1118,42 @@
                 location: document.getElementById('location').value,
                 description: document.getElementById('description').value,
                 images: uploadedImages,
-                timestamp: isEditing ? allLogs.find(l => l.id === logId).timestamp : new Date().toISOString(),
-                date: new Date().toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric'
-                }),
-                time: new Date().toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }),
-                author: currentUser.name,
-                authorEmail: currentUser.email,
-                lastModified: isEditing ? new Date().toISOString() : null
+                createdBy: currentUser.email,
+                timestamp: new Date().toISOString(),
+                logoUrl: CUSTOM_LOGO_URL
             };
 
             try {
-                localStorage.setItem(`log:${log.id}`, JSON.stringify(log));
+                // Save to database instead of localStorage
+                if (isEditing) {
+                    // Update existing log (future feature)
+                    showToast('Editing not yet implemented', 'error');
+                    submitBtn.innerHTML = '<span>Submit Log Entry</span>';
+                    submitBtn.disabled = false;
+                    return;
+                } else {
+                    // Create new log
+                    await saveLogToServer(log);
+                    logs.unshift(log);
+                }
                 
                 this.reset();
                 uploadedImages = [];
                 updateImagePreview();
-                await loadLogs();
+                applyFilters();
 
                 submitBtn.classList.add('btn-success');
-                submitBtn.innerHTML = isEditing ? '<span>✓ Log Updated!</span>' : '<span>✓ Log Saved!</span>';
-                showToast(isEditing ? 'Log updated successfully!' : 'Log entry saved successfully!', 'success');
+                submitBtn.innerHTML = '<span>✓ Log Saved!</span>';
+                showToast('Log entry saved successfully!', 'success');
 
                 setTimeout(() => {
-                    cancelEdit();
+                    submitBtn.classList.remove('btn-success');
+                    submitBtn.innerHTML = '<span>Submit Log Entry</span>';
                     submitBtn.disabled = false;
                 }, 2000);
             } catch (error) {
                 console.error('Error saving log:', error);
-                showToast('Error saving log. Please try again.', 'error');
+                showToast('Error saving log: ' + error.message, 'error');
                 submitBtn.innerHTML = '<span>Submit Log Entry</span>';
                 submitBtn.disabled = false;
             }
