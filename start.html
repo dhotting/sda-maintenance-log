@@ -789,7 +789,6 @@
             border-left: 4px solid var(--danger);
         }
     </style>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- Login Screen -->
@@ -949,7 +948,7 @@
         // Configuration
         const GOOGLE_CLIENT_ID = '456685867763-5vcvlp0tu0ddurnrc67onu16lti2uij4.apps.googleusercontent.com';
         const ALLOWED_DOMAIN = '@southdadeacademy.com';
-        const PDF_SERVER_URL = window.location.origin;
+        const PDF_SERVER_URL = 'http://localhost:5000';
         
         // South Dade Academy Logo
         const CUSTOM_LOGO_URL = 'https://southdadeacademy.com/wp-content/uploads/2024/08/SDA-Logo-1-e1731009797781-3.png';
@@ -1155,15 +1154,68 @@
             }
         });
 
-        async function loadLogs() {
+        async 
+        // ========== DATABASE API FUNCTIONS ==========
+        
+        // Fetch all logs from server
+        async function fetchLogsFromServer() {
             try {
-                let logs = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key.startsWith('log:')) {
-                        try {
-                            logs.push(JSON.parse(localStorage.getItem(key)));
-                        } catch (err) {
+                const response = await fetch(`${PDF_SERVER_URL}/api/logs`);
+                if (!response.ok) throw new Error('Failed to fetch logs');
+                const serverLogs = await response.json();
+                console.log(`✓ Loaded ${serverLogs.length} logs from server`);
+                return serverLogs;
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+                showToast('Failed to load logs from server', 'error');
+                return [];
+            }
+        }
+
+        // Save log to server
+        async function saveLogToServer(log) {
+            try {
+                const response = await fetch(`${PDF_SERVER_URL}/api/logs`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(log)
+                });
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to save log');
+                }
+                const result = await response.json();
+                console.log(`✓ Saved log to server: ${result.id}`);
+                return result;
+            } catch (error) {
+                console.error('Error saving log:', error);
+                showToast(`Failed to save log: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        // Delete log from server
+        async function deleteLogFromServer(logId) {
+            try {
+                const response = await fetch(`${PDF_SERVER_URL}/api/logs/${logId}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) throw new Error('Failed to delete log');
+                const result = await response.json();
+                console.log(`✓ Deleted log from server: ${logId}`);
+                return result;
+            } catch (error) {
+                console.error('Error deleting log:', error);
+                showToast('Failed to delete log', 'error');
+                throw error;
+            }
+        }
+
+        async function loadLogs() {
+            // Load from server database instead of localStorage
+            logs = await fetchLogsFromServer();
+            applyFilters();
+        } catch (err) {
                             console.error('Error loading log:', key, err);
                         }
                     }
