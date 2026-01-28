@@ -26,8 +26,11 @@ if database_url:
     if database_url.startswith('postgres://'):
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+    print("✓ Using PostgreSQL database (data persists across restarts)")
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///maintenance_logs.db'
+    print("⚠️  WARNING: Using SQLite fallback - DATA WILL BE LOST ON RESTART!")
+    print("⚠️  Please set DATABASE_URL environment variable in Render")
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
