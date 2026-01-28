@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Maintenance Log System - South Dade Academy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -800,27 +800,78 @@
         /* Mobile Responsive Styles */
         
         /* Mobile Layout Fixes */
+        
+        
+        
+
+        /* Mobile New Log Button */
+        .mobile-new-log-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        
+        .mobile-new-log-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .mobile-close-btn {
+            display: none;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #f3f4f6;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: #6b7280;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             body {
                 overflow-x: hidden;
             }
             
-            .container {
-                padding: 0.5rem;
+            /* Show mobile button */
+            .mobile-new-log-btn {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
             }
             
+            .mobile-close-btn {
+                display: block;
+            }
+            
+            /* Header */
             .header {
                 padding: 1rem;
                 position: sticky;
                 top: 0;
                 z-index: 100;
                 background: white;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             
             .header-content {
                 flex-direction: column;
-                align-items: flex-start;
                 gap: 1rem;
             }
             
@@ -837,124 +888,90 @@
                 justify-content: space-between;
             }
             
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            
+            .user-details h3 {
+                font-size: 0.95rem;
+            }
+            
+            .user-details p {
+                font-size: 0.8rem;
+            }
+            
+            /* Main Content */
+            .container {
+                padding: 0;
+            }
+            
             .main-content {
                 flex-direction: column;
-                gap: 1rem;
-                padding: 1rem 0.5rem;
+                padding: 0;
+                gap: 0;
             }
             
+            /* Form Section - Hidden by default on mobile */
             .form-section {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 width: 100%;
-                margin-bottom: 0;
+                height: 100vh;
+                max-height: 100vh;
+                background: white;
+                z-index: 999;
+                overflow-y: auto;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
                 padding: 1rem;
+                padding-top: 4rem;
             }
             
-            .logs-section {
-                width: 100%;
-                padding: 1rem;
-                max-height: none;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 0.75rem;
-            }
-            
-            .filter-tabs {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                gap: 0.5rem;
-                padding-bottom: 0.5rem;
-            }
-            
-            .filter-btn {
-                white-space: nowrap;
-                padding: 0.625rem 1rem;
-                flex-shrink: 0;
-            }
-            
-            .log-card {
-                padding: 1rem;
-                margin-bottom: 1rem;
-            }
-            
-            .log-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
-            
-            .log-actions {
-                width: 100%;
-                justify-content: flex-start;
-                flex-wrap: wrap;
-                gap: 0.5rem;
-            }
-            
-            .log-actions button {
-                padding: 0.5rem 1rem;
-                font-size: 0.875rem;
-                flex: 1;
-                min-width: 100px;
+            .form-section.mobile-visible {
+                display: block;
             }
             
             .form-section h3 {
-                font-size: 1.25rem;
-                margin-bottom: 1rem;
+                font-size: 1.5rem;
+                margin-bottom: 1.5rem;
             }
             
             .form-group {
-                margin-bottom: 1rem;
-            }
-            
-            .image-preview-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
-            }
-            
-            .modal-content {
-                width: 95%;
-                margin: 1rem auto;
-                padding: 1.5rem;
-                max-height: 90vh;
-                overflow-y: auto;
+                margin-bottom: 1.5rem;
             }
             
             .form-input,
             .form-select,
             .form-textarea {
                 font-size: 16px;
-                padding: 0.75rem;
+                padding: 1rem;
             }
             
-            .btn-primary,
-            .btn-secondary {
-                padding: 0.875rem 1.5rem;
-                font-size: 1rem;
+            /* Logs Section - Full screen on mobile */
+            .logs-section {
                 width: 100%;
+                padding: 1rem;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+                min-height: calc(100vh - 200px);
             }
             
-            .log-title {
-                font-size: 1.125rem;
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.5rem;
+                margin-bottom: 1rem;
             }
             
-            .log-meta,
-            .log-description {
-                font-size: 0.9rem;
-            }
-            
-            .image-upload-box {
-                padding: 2rem 1rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.25rem;
-            }
-            
-            .header p {
-                font-size: 0.75rem;
+            .stat-card {
+                padding: 1rem;
             }
             
             .stat-card h3 {
@@ -965,16 +982,123 @@
                 font-size: 0.75rem;
             }
             
-            .image-preview-grid {
-                grid-template-columns: 1fr;
+            /* Filter Tabs */
+            .filter-tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 0.5rem;
+                padding-bottom: 0.5rem;
+                margin-bottom: 1rem;
             }
             
-            .user-details h3 {
+            .filter-btn {
+                white-space: nowrap;
+                padding: 0.75rem 1.25rem;
+                flex-shrink: 0;
+                font-size: 0.875rem;
+            }
+            
+            /* Log Cards */
+            .logs-container {
+                max-height: none;
+            }
+            
+            .log-card {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .log-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .log-title {
+                font-size: 1.125rem;
+            }
+            
+            .log-meta {
+                font-size: 0.8rem;
+                gap: 0.5rem;
+            }
+            
+            .log-badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.75rem;
+            }
+            
+            .log-description {
+                font-size: 0.9rem;
+                line-height: 1.5;
+            }
+            
+            .log-actions {
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .log-actions button {
+                flex: 1;
+                min-width: calc(50% - 0.25rem);
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Image Upload */
+            .image-preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+            
+            .image-upload-box {
+                padding: 2rem 1rem;
+            }
+            
+            /* Buttons */
+            .btn-primary {
+                width: 100%;
+                padding: 1rem;
                 font-size: 1rem;
             }
             
-            .user-details p {
-                font-size: 0.8rem;
+            /* Modal */
+            .modal-content {
+                width: 95%;
+                max-width: 95%;
+                margin: 1rem auto;
+                padding: 1.5rem;
+                max-height: 90vh;
+            }
+            
+            /* Empty State */
+            .empty-state {
+                padding: 2rem 1rem;
+            }
+            
+            .empty-state svg {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .empty-state h3 {
+                font-size: 1.25rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .log-actions button {
+                min-width: 100%;
+            }
+            
+            .image-preview-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1187,6 +1311,27 @@
             }
         }
 
+
+        function toggleMobileForm() {
+            // Reset form if opening
+            if (!document.querySelector('.form-section').classList.contains('mobile-visible')) {
+                document.getElementById('logForm').reset();
+                uploadedImages = [];
+                updateImagePreview();
+            }
+            const formSection = document.querySelector('.form-section');
+            const mainContent = document.querySelector('.main-content');
+            formSection.classList.toggle('mobile-visible');
+            mainContent.classList.toggle('form-open');
+        }
+
+        function closeMobileForm() {
+            const formSection = document.querySelector('.form-section');
+            const mainContent = document.querySelector('.main-content');
+            formSection.classList.remove('mobile-visible');
+            mainContent.classList.remove('form-open');
+        }
+
         function isValidEmail(email) {
             return email.toLowerCase().endsWith(ALLOWED_DOMAIN);
         }
@@ -1356,7 +1501,8 @@
                     submitBtn.classList.remove('btn-success');
                     submitBtn.innerHTML = '<span>Submit Log Entry</span>';
                     submitBtn.disabled = false;
-                }, 2000);
+                    closeMobileForm(); // Close mobile form after saving
+                }, 1500);
             } catch (error) {
                 console.error('Error saving log:', error);
                 showToast('Error saving log: ' + error.message, 'error');
